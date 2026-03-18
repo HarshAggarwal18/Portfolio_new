@@ -5,7 +5,8 @@ portfolio website.
 
 ## Instructions
 
-I have modified the gsap club plugins with the trial plugins, but with the trial plugin you cannot host it🔴. So for Club plugins, Check out here: https://gsap.com/docs/v3/Installation/
+This project uses the standard `gsap` package including `ScrollSmoother` and
+`SplitText` plugins.
 
 **Techstack** - React, TypeScript, GSAP, ThreeJS, WebGL, Java, Spring Boot,
 Spring Security
