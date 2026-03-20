@@ -11,28 +11,33 @@ import {
   RapierRigidBody,
 } from "@react-three/rapier";
 
-const textureLoader = new THREE.TextureLoader();
-const imageUrls = [
-  "/images/react2.webp",
-  "/images/next2.webp",
-  "/images/node2.webp",
-  "/images/express.webp",
-  "/images/mongo.webp",
-  "/images/mysql.webp",
-  "/images/typescript.webp",
-  "/images/javascript.webp",
+const techStackLogos = [
+  { name: "Java", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
+  { name: "Spring Boot", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg" },
+  { name: "Spring Security", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg" },
+  { name: "React", image: "/images/react2.webp" },
+  { name: "TypeScript", image: "/images/typescript.webp" },
+  { name: "JavaScript", image: "/images/javascript.webp" },
+  { name: "Node.js", image: "/images/node2.webp" },
+  { name: "Express", image: "/images/express.webp" },
+  { name: "MongoDB", image: "/images/mongo.webp" },
+  { name: "PostgreSQL", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
+  { name: "Docker", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
+  { name: "AWS", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
+  { name: "Next.js", image: "/images/next2.webp" },
 ];
-const textures = imageUrls.map((url) => textureLoader.load(url));
 
 const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
 
-const spheres = [...Array(30)].map(() => ({
+const spheres = [...Array(30)].map((_, index) => ({
   scale: [0.7, 1, 0.8, 1, 1][Math.floor(Math.random() * 5)],
+  textureIndex: index % techStackLogos.length,
 }));
 
 type SphereProps = {
   vec?: THREE.Vector3;
   scale: number;
+  textureIndex: number;
   r?: typeof THREE.MathUtils.randFloatSpread;
   material: THREE.MeshPhysicalMaterial;
   isActive: boolean;
@@ -151,24 +156,45 @@ const TechStack = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   const materials = useMemo(() => {
-    return textures.map(
-      (texture) =>
-        new THREE.MeshPhysicalMaterial({
-          map: texture,
-          emissive: "#ffffff",
-          emissiveMap: texture,
-          emissiveIntensity: 0.3,
-          metalness: 0.5,
-          roughness: 1,
-          clearcoat: 0.1,
-        })
-    );
+    const loader = new THREE.TextureLoader();
+    loader.setCrossOrigin("anonymous");
+
+    return techStackLogos.map(({ image }) => {
+      const texture = loader.load(image);
+      texture.colorSpace = THREE.SRGBColorSpace;
+
+      return new THREE.MeshPhysicalMaterial({
+        color: "#06080d",
+        map: texture,
+        emissive: "#9be7db",
+        emissiveMap: texture,
+        emissiveIntensity: 0.22,
+        metalness: 0.2,
+        roughness: 0.78,
+        clearcoat: 0.12,
+      });
+    });
   }, []);
 
   return (
     <div className="techstack">
-      <h2> My Techstack</h2>
+      <div className="techstack-copy">
+        <div className="techstack-header">
+          <h2>My Tech Stack</h2>
+          <p>
+            Backend, frontend, and cloud technologies I use to ship
+            production-ready apps.
+          </p>
+        </div>
+
+        <div className="techstack-tags" aria-label="Technology list">
+          {techStackLogos.map((tech) => (
+            <span key={tech.name}>{tech.name}</span>
+          ))}
+        </div>
+      </div>
 
       <Canvas
         shadows
@@ -193,7 +219,7 @@ const TechStack = () => {
             <SphereGeo
               key={i}
               {...props}
-              material={materials[Math.floor(Math.random() * materials.length)]}
+              material={materials[props.textureIndex]}
               isActive={isActive}
             />
           ))}

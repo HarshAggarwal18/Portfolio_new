@@ -113,15 +113,58 @@ body {
   margin-bottom: -100px;
 }
 
-.techstack h2 {
-  font-size: 80px;
-  text-align: center;
+.techstack-copy {
   position: absolute;
-  width: 100%;
-  top: 120px;
-  left: 0;
+  top: 62px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1200px, calc(100% - 24px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.techstack-header {
+  width: min(1100px, calc(100% - 12px));
+  text-align: center;
+}
+
+.techstack h2 {
+  font-size: clamp(44px, 7vw, 78px);
+  text-align: center;
+  margin: 0;
   font-weight: 400;
   text-transform: uppercase;
+}
+
+.techstack-header p {
+  margin: 12px auto 0;
+  max-width: 760px;
+  color: rgba(234, 229, 236, 0.78);
+  font-size: clamp(14px, 2.1vw, 18px);
+  letter-spacing: 0.2px;
+}
+
+.techstack-tags {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.techstack-tags span {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(94, 234, 212, 0.4);
+  background: rgba(6, 20, 26, 0.65);
+  color: #dcfffa;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  line-height: 1;
 }
 
 @media screen and (min-width: 768px) {
@@ -131,7 +174,32 @@ body {
 }
 
 @media screen and (max-width: 900px) {
+  .techstack {
+    margin-top: 30px;
+    margin-bottom: -40px;
+  }
+
   .techstack h2 {
     font-size: 40px;
+  }
+
+  .techstack-copy {
+    top: 36px;
+    gap: 12px;
+  }
+
+  .techstack-header p {
+    margin-top: 8px;
+    max-width: 95%;
+  }
+
+  .techstack-tags {
+    top: 140px;
+    gap: 8px;
+  }
+
+  .techstack-tags span {
+    font-size: 11px;
+    padding: 6px 10px;
   }
 }

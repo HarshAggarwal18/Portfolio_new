@@ -6,14 +6,7 @@ const About = () => {
       <div className="about-me">
         <h3 className="title">About Me</h3>
         <p className="para">
-          Full Stack Developer with a strong backend focus on Java, Spring Boot,
-          and Spring Security. I build secure REST APIs and production-ready web
-          applications with hands-on experience across React, MongoDB,
-          PostgreSQL, Docker, CI/CD pipelines, AWS deployments, and AI feature
-          integration using Spring AI across 3+ projects. I am focused on backend
-          engineering, authentication, clean API design, data management, and
-          practical AI integration. I have solved 450+ Data Structures and
-          Algorithms problems on LeetCode and GeeksforGeeks.
+          Full Stack Developer specializing in backend engineering with expertise in Java, Spring Boot, and Spring Security. I design and deploy secure REST APIs and production-ready applications using React, MongoDB, PostgreSQL, Docker, and AWS. Passionate about clean code, authentication systems, and integrating AI features with Spring AI. Consistently solved 450+ DSA problems on LeetCode and GeeksforGeeks.
         </p>
       </div>
     </div>

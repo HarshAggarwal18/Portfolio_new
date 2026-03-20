@@ -1,4 +1,10 @@
-import { useState, useCallback } from "react";
+import {
+  useState,
+  useCallback,
+  useRef,
+  type WheelEvent,
+  type TouchEvent,
+} from "react";
 import "./styles/Work.css";
 import WorkImage from "./WorkImage";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
@@ -13,7 +19,7 @@ const projects = [
     live: "https://joobhook-frontend.onrender.com/",
     frontendRepo: "https://github.com/HarshAggarwal18/JoobHook-FrontEnd",
     backendRepo: "https://github.com/HarshAggarwal18/JoobHook",
-    image: "/images/Solidx.png",
+    image: "/images/prj1.png",
   },
   {
     title: "HireSense",
@@ -24,7 +30,7 @@ const projects = [
     frontendRepo:
       "https://github.com/HarshAggarwal18/AI-Resume-Analyzer-Frontend",
     backendRepo: "https://github.com/HarshAggarwal18/AI-RESUME-ANALYSER-",
-    image: "/images/radix.png",
+    image: "/images/prj2.png",
   },
   {
     title: "KeySprint",
@@ -34,13 +40,15 @@ const projects = [
     live: "https://replit.com/@harshgrwl18/Typing-Tutor",
     frontendRepo: "https://github.com/HarshAggarwal18/Typing-Tutor",
     backendRepo: "https://github.com/HarshAggarwal18/Typing-Tutor",
-    image: "/images/bond.png",
+    image: "/images/prj3.png",
   },
 ];
 
 const Work = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const touchStartXRef = useRef<number | null>(null);
+  const lastGestureTimeRef = useRef(0);
 
   const goToSlide = useCallback(
     (index: number) => {
@@ -64,6 +72,57 @@ const Work = () => {
     goToSlide(newIndex);
   }, [currentIndex, goToSlide]);
 
+  const canHandleGesture = useCallback(() => {
+    const now = Date.now();
+    if (now - lastGestureTimeRef.current < 550 || isAnimating) {
+      return false;
+    }
+    lastGestureTimeRef.current = now;
+    return true;
+  }, [isAnimating]);
+
+  const handleWheel = useCallback(
+    (event: WheelEvent<HTMLDivElement>) => {
+      if (Math.abs(event.deltaY) < 20) return;
+      if (!canHandleGesture()) return;
+      event.preventDefault();
+
+      if (event.deltaY > 0) {
+        goToNext();
+      } else {
+        goToPrev();
+      }
+    },
+    [canHandleGesture, goToNext, goToPrev]
+  );
+
+  const handleTouchStart = useCallback(
+    (event: TouchEvent<HTMLDivElement>) => {
+      touchStartXRef.current = event.touches[0].clientX;
+    },
+    []
+  );
+
+  const handleTouchEnd = useCallback(
+    (event: TouchEvent<HTMLDivElement>) => {
+      if (touchStartXRef.current === null || !canHandleGesture()) {
+        touchStartXRef.current = null;
+        return;
+      }
+
+      const diff = touchStartXRef.current - event.changedTouches[0].clientX;
+      touchStartXRef.current = null;
+      if (Math.abs(diff) < 45) return;
+
+      if (diff > 0) {
+        goToNext();
+      } else {
+        goToPrev();
+      }
+    },
+    [canHandleGesture, goToNext, goToPrev]
+  );
+
   return (
     <div className="work-section" id="work">
       <div className="work-container section-container">
@@ -71,7 +130,12 @@ const Work = () => {
           My <span>Work</span>
         </h2>
 
-        <div className="carousel-wrapper">
+        <div
+          className="carousel-wrapper"
+          onWheel={handleWheel}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           {/* Navigation Arrows */}
           <button
             className="carousel-arrow carousel-arrow-left"
@@ -113,41 +177,48 @@ const Work = () => {
                         <div className="carousel-tools">
                           <span className="tools-label">Tools & Features</span>
                           <p>{project.tools}</p>
-                          <p>
+
+                          <div className="project-links" role="list">
                             <a
                               href={project.live}
                               target="_blank"
                               rel="noopener noreferrer"
                               data-cursor="disable"
+                              className="project-link-btn"
+                              role="listitem"
                             >
-                              Live <MdArrowOutward />
+                              Live Demo <MdArrowOutward />
                             </a>
-                          </p>
-                          <p>
                             <a
                               href={project.frontendRepo}
                               target="_blank"
                               rel="noopener noreferrer"
                               data-cursor="disable"
+                              className="project-link-btn"
+                              role="listitem"
                             >
                               Frontend Repo <MdArrowOutward />
                             </a>
-                          </p>
-                          <p>
                             <a
                               href={project.backendRepo}
                               target="_blank"
                               rel="noopener noreferrer"
                               data-cursor="disable"
+                              className="project-link-btn"
+                              role="listitem"
                             >
                               Backend Repo <MdArrowOutward />
                             </a>
-                          </p>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div className="carousel-image-wrapper">
-                      <WorkImage image={project.image} alt={project.title} />
+                      <WorkImage
+                        image={project.image}
+                        alt={project.title}
+                        link={project.live}
+                      />
                     </div>
                   </div>
                 </div>
